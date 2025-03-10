@@ -1,19 +1,18 @@
-<h1>Previsão do Tempo</h1>
-<input [(ngModel)]="city" placeholder="Digite a cidade" />
-<button (click)="updateCity()">Buscar</button>
-<button (click)="getByCoordinates()">Pegar por localização</button>
+<header>
+  <app-search-cities [(city)]="city" (chooseCity)="changeCity($event)" />
+  <button mat-fab extended (click)="getByCoordinates()">
+    <mat-icon>my_location</mat-icon>
+    Search by your location
+  </button>
+</header>
 
-@let _weather = weather();
-
-@if (_weather) {
-  <div>
-    <p><strong>Temperatura:</strong> {{ isLoading() ? '...' : _weather.temp }}°C</p>
-    <p><strong>Sensação térmica:</strong> {{ isLoading() ? '...' : _weather.feels_like }}°C</p>
-    <p><strong>Mínima:</strong> {{ isLoading() ? '...' : _weather.temp_min }}°C</p>
-    <p><strong>Máxima:</strong> {{ isLoading() ? '...' : _weather.temp_max }}°C</p>
-    <p><strong>Pressão:</strong> {{ isLoading() ? '...' : _weather.pressure }} hPa</p>
-    <p><strong>Umidade:</strong> {{ isLoading() ? '...' : _weather.humidity }}%</p>
-    <p><strong>Nível do mar:</strong> {{ isLoading() ? '...' : _weather.sea_level || 'N/A' }} hPa</p>
-    <p><strong>Nível do solo:</strong> {{ isLoading() ? '...' : _weather.grnd_level || 'N/A' }} hPa</p>
-  </div>
-}
+@let _weather = !weather.isLoading() ? weather.value()?.main : undefined;
+<main>
+  <app-label title="Feels Like"   [value]="_weather?.feels_like" suffix="°C" />
+  <app-label title="Minimum"      [value]="_weather?.temp_min" suffix="°C" />
+  <app-label title="Maximum"      [value]="_weather?.temp_max" suffix="°C" />
+  <app-label title="Pressure"     [value]="_weather?.pressure" suffix="hPa" />
+  <app-label title="Humidity"     [value]="_weather?.humidity" suffix="%" />
+  <app-label title="Sea Level"    [value]="_weather?.sea_level" suffix="m" />
+  <app-label title="Ground Level" [value]="_weather?.grnd_level" suffix="m" />
+</main>

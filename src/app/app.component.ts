@@ -1,14 +1,19 @@
-import { Component, effect, inject, linkedSignal, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, linkedSignal, WritableSignal } from '@angular/core';
 import { WeatherService } from './weather/weather.service';
 import { FormsModule } from '@angular/forms';
-import { merge } from 'rxjs';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { SearchCitiesComponent } from "./search-cities/search-cities.component";
+import { LabelComponent } from "./label/label.component";
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
   imports: [
     FormsModule,
+    SearchCitiesComponent,
+    LabelComponent,
+    MatButtonModule,
+    MatIconModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -16,16 +21,17 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 export class AppComponent {
   private weatherService = inject(WeatherService);
 
-  readonly city = linkedSignal(() => this.weatherService.coordinatesCity());
+  readonly weather = this.weatherService.weather;
+  readonly city: WritableSignal<string> = linkedSignal({
+    source: () => this.weather.value()?.name,
+    computation: (newValue, old) => newValue || old?.source || "",
+  });
 
-  readonly weather = toSignal(this.weatherService.weather$);
-  readonly isLoading = toSignal(this.weatherService.isLoading$);
-
-  updateCity() {
-    this.weatherService.city.set(this.city());
+  changeCity(city: string) {
+    this.weatherService.city.set(city);
   }
 
   getByCoordinates() {
-    this.weatherService.weatherByCoordinates.reload();
+    this.weatherService.getByLocation();
   }
 }
