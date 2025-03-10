@@ -1,0 +1,13 @@
+p {
+    display: flex;
+    align-items: baseline;
+}
+
+.bold {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+mat-progress-bar {
+    max-width: 50px;
+}

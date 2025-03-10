@@ -1,0 +1,8 @@
+<p>
+    <span class="bold">{{ this.title() }}</span>: 
+    @if (value()) {
+        {{ value() }}{{ suffix() }}
+    } @else {
+        <mat-progress-bar mode="buffer" />
+    }
+</p>
