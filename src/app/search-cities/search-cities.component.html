@@ -1,0 +1,9 @@
+<mat-form-field class="example-full-width">
+  <mat-label>Search City</mat-label>
+  <input type="text" placeholder="Pick one" aria-label="City" matInput [(ngModel)]="search" [matAutocomplete]="auto" >
+  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="chooseCity.emit($event.option.value)">
+    @for (city of options(); track city) {
+      <mat-option [value]="city">{{city}}</mat-option>
+    }
+  </mat-autocomplete>
+</mat-form-field>
